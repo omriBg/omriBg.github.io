@@ -6,13 +6,41 @@ const Contact = () => {
     email: '',
     message: ''
   })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // כאן תוכל להוסיף לוגיקה לשליחת הטופס
-    console.log('Form submitted:', formData)
-    alert('תודה! אחזור אליך בקרוב.')
-    setFormData({ name: '', email: '', message: '' })
+    setIsSubmitting(true)
+    setSubmitStatus('idle')
+
+    try {
+      // שליחת המייל דרך EmailJS או שירות דומה
+      const response = await fetch('https://formspree.io/f/xgegqjqj', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+          _subject: `הודעה חדשה מ-${formData.name} - פרופיליו עומרי בן-גיגי`
+        })
+      })
+
+      if (response.ok) {
+        setSubmitStatus('success')
+        setFormData({ name: '', email: '', message: '' })
+      } else {
+        setSubmitStatus('error')
+      }
+    } catch (error) {
+      console.error('Error sending email:', error)
+      setSubmitStatus('error')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -116,9 +144,25 @@ const Contact = () => {
                 ></textarea>
               </div>
               
-              <button type="submit" className="btn btn-primary">
-                שלח הודעה
+              <button 
+                type="submit" 
+                className="btn btn-primary"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'שולח...' : 'שלח הודעה'}
               </button>
+
+              {submitStatus === 'success' && (
+                <div className="success-message">
+                  ✅ תודה! ההודעה נשלחה בהצלחה. אחזור אליך בקרוב.
+                </div>
+              )}
+
+              {submitStatus === 'error' && (
+                <div className="error-message">
+                  ❌ אירעה שגיאה בשליחת ההודעה. נסה שוב או צור קשר ישירות.
+                </div>
+              )}
             </form>
           </div>
         </div>

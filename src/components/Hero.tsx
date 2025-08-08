@@ -29,7 +29,7 @@ const Hero = () => {
           <div className={`hero-visual ${isVisible ? 'slide-in-right' : ''}`}>
             <div className="hero-avatar">
               <div className="avatar-placeholder">
-                <span>ע</span>
+                <span>🎋</span>
               </div>
             </div>
           </div>
