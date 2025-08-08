@@ -25,14 +25,6 @@ const Hero = () => {
               <a href="#contact" className="btn btn-secondary">צור קשר</a>
             </div>
           </div>
-          
-          <div className={`hero-visual ${isVisible ? 'slide-in-right' : ''}`}>
-            <div className="hero-avatar">
-              <div className="avatar-placeholder">
-                <span>🎋</span>
-              </div>
-            </div>
-          </div>
         </div>
         
         <div className={`scroll-indicator ${isVisible ? 'fade-in' : ''}`}>

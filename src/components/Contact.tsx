@@ -4,49 +4,37 @@ const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    subject: '',
     message: ''
   })
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    setSubmitStatus('idle')
-
-    try {
-      // שליחת המייל דרך EmailJS או שירות דומה
-      const response = await fetch('https://formspree.io/f/xgegqjqj', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          message: formData.message,
-          _subject: `הודעה חדשה מ-${formData.name} - פרופיליו עומרי בן-גיגי`
-        })
-      })
-
-      if (response.ok) {
-        setSubmitStatus('success')
-        setFormData({ name: '', email: '', message: '' })
-      } else {
-        setSubmitStatus('error')
-      }
-    } catch (error) {
-      console.error('Error sending email:', error)
-      setSubmitStatus('error')
-    } finally {
-      setIsSubmitting(false)
-    }
+  const handleChange = (e: any) => {
+    const { name, value } = e.target
+    setFormData((prev: any) => ({
+      ...prev,
+      [name]: value
+    }))
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleSubmit = (e: any) => {
+    e.preventDefault()
+    
+    // יצירת תוכן המייל
+    const mailtoLink = `mailto:omri952682@gmail.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(
+      `שם: ${formData.name}\n` +
+      `אימייל: ${formData.email}\n\n` +
+      `הודעה:\n${formData.message}`
+    )}`
+    
+    // פתיחת תיבת המייל של המשתמש
+    window.open(mailtoLink)
+    
+    // איפוס הטופס
     setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
+      name: '',
+      email: '',
+      subject: '',
+      message: ''
     })
   }
 
@@ -105,8 +93,9 @@ const Contact = () => {
               </a>
             </div>
           </div>
-          
+
           <div className="contact-form">
+            <h3>שלח לי הודעה</h3>
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label htmlFor="name">שם מלא</label>
@@ -133,6 +122,18 @@ const Contact = () => {
               </div>
               
               <div className="form-group">
+                <label htmlFor="subject">נושא</label>
+                <input
+                  type="text"
+                  id="subject"
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              
+              <div className="form-group">
                 <label htmlFor="message">הודעה</label>
                 <textarea
                   id="message"
@@ -141,28 +142,12 @@ const Contact = () => {
                   onChange={handleChange}
                   rows={5}
                   required
-                ></textarea>
+                />
               </div>
               
-              <button 
-                type="submit" 
-                className="btn btn-primary"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? 'שולח...' : 'שלח הודעה'}
+              <button type="submit" className="btn btn-primary">
+                שלח הודעה
               </button>
-
-              {submitStatus === 'success' && (
-                <div className="success-message">
-                  ✅ תודה! ההודעה נשלחה בהצלחה. אחזור אליך בקרוב.
-                </div>
-              )}
-
-              {submitStatus === 'error' && (
-                <div className="error-message">
-                  ❌ אירעה שגיאה בשליחת ההודעה. נסה שוב או צור קשר ישירות.
-                </div>
-              )}
             </form>
           </div>
         </div>
