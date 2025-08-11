@@ -27,19 +27,20 @@ const Contact = () => {
     try {
       // EmailJS configuration
       const templateParams = {
-        from_name: formData.name,
-        from_email: formData.email,
+        name: formData.name,
+        email: formData.email,
         subject: formData.subject,
         message: formData.message,
-        to_name: 'עומרי בן-גיגי'
+        from_name: formData.name,
+        from_email: formData.email
       }
 
       // שליחת המייל באמצעות EmailJS
       await emailjs.send(
-        'service_omribg', // Service ID - צריך ליצור ב-EmailJS
-        'template_omribg', // Template ID - צריך ליצור ב-EmailJS
+        'service_ekxepfn', // Service ID של עומרי
+        'template_2f9n1ck', // Template ID של עומרי
         templateParams,
-        'YOUR_PUBLIC_KEY' // Public Key - צריך לקבל מ-EmailJS
+        'MUYqJ8wx3KKENbJXG' // Public Key של עומרי
       )
 
       setSubmitStatus('success')
