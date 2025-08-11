@@ -1,3 +1,10 @@
+/* App Container */
+.App {
+  min-height: 100vh;
+  width: 100%;
+  background: var(--background);
+}
+
 /* Header Styles */
 .header {
   position: fixed;
@@ -77,6 +84,7 @@
   padding-top: 80px;
   position: relative;
   overflow: hidden;
+  width: 100%;
 }
 
 .hero::before {
@@ -186,11 +194,17 @@
 
 .hero-content {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 4rem;
   align-items: center;
   position: relative;
   z-index: 1;
+  width: 100%;
+}
+
+.hero-text {
+  text-align: center;
+  width: 100%;
 }
 
 .hero-title {
@@ -1213,9 +1227,12 @@
 }
 
 .contact-content {
-  max-width: 800px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+  max-width: 1200px;
   margin: 0 auto;
-  text-align: center;
 }
 
 .contact-details {
@@ -1297,11 +1314,8 @@
 }
 
 /* Contact Form */
-.contact-content {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
-  align-items: start;
+.contact-info {
+  text-align: center;
 }
 
 .contact-form {
