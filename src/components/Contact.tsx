@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import emailjs from 'emailjs-com'
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -7,6 +8,8 @@ const Contact = () => {
     subject: '',
     message: ''
   })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
 
   const handleChange = (e: any) => {
     const { name, value } = e.target
@@ -16,26 +19,42 @@ const Contact = () => {
     }))
   }
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault()
-    
-    // יצירת תוכן המייל
-    const mailtoLink = `mailto:omri952682@gmail.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(
-      `שם: ${formData.name}\n` +
-      `אימייל: ${formData.email}\n\n` +
-      `הודעה:\n${formData.message}`
-    )}`
-    
-    // פתיחת תיבת המייל של המשתמש
-    window.open(mailtoLink)
-    
-    // איפוס הטופס
-    setFormData({
-      name: '',
-      email: '',
-      subject: '',
-      message: ''
-    })
+    setIsSubmitting(true)
+    setSubmitStatus('idle')
+
+    try {
+      // EmailJS configuration
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email,
+        subject: formData.subject,
+        message: formData.message,
+        to_name: 'עומרי בן-גיגי'
+      }
+
+      // שליחת המייל באמצעות EmailJS
+      await emailjs.send(
+        'service_omribg', // Service ID - צריך ליצור ב-EmailJS
+        'template_omribg', // Template ID - צריך ליצור ב-EmailJS
+        templateParams,
+        'YOUR_PUBLIC_KEY' // Public Key - צריך לקבל מ-EmailJS
+      )
+
+      setSubmitStatus('success')
+      setFormData({
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+      })
+    } catch (error) {
+      console.error('Error sending email:', error)
+      setSubmitStatus('error')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -96,6 +115,21 @@ const Contact = () => {
 
           <div className="contact-form">
             <h3>שלח לי הודעה</h3>
+            
+            {submitStatus === 'success' && (
+              <div className="success-message">
+                <span>✅</span>
+                <p>ההודעה נשלחה בהצלחה! אחזור אליך בקרוב.</p>
+              </div>
+            )}
+            
+            {submitStatus === 'error' && (
+              <div className="error-message">
+                <span>❌</span>
+                <p>אירעה שגיאה בשליחת ההודעה. נסה שוב או צור קשר ישירות.</p>
+              </div>
+            )}
+            
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label htmlFor="name">שם מלא</label>
@@ -106,6 +140,7 @@ const Contact = () => {
                   value={formData.name}
                   onChange={handleChange}
                   required
+                  disabled={isSubmitting}
                 />
               </div>
               
@@ -118,6 +153,7 @@ const Contact = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
+                  disabled={isSubmitting}
                 />
               </div>
               
@@ -130,6 +166,7 @@ const Contact = () => {
                   value={formData.subject}
                   onChange={handleChange}
                   required
+                  disabled={isSubmitting}
                 />
               </div>
               
@@ -142,11 +179,26 @@ const Contact = () => {
                   onChange={handleChange}
                   rows={5}
                   required
+                  disabled={isSubmitting}
                 />
               </div>
               
-              <button type="submit" className="btn btn-primary">
-                שלח הודעה
+              <button 
+                type="submit" 
+                className="btn btn-primary"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <span className="loading-spinner"></span>
+                    שולח...
+                  </>
+                ) : (
+                  <>
+                    <span>שלח הודעה</span>
+                    <div className="btn-glow"></div>
+                  </>
+                )}
               </button>
             </form>
           </div>
