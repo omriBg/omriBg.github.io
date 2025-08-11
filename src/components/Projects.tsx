@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react'
 const Projects = () => {
   const [isVisible, setIsVisible] = useState(false)
 
-
   useEffect(() => {
     setIsVisible(true)
   }, [])
@@ -40,7 +39,7 @@ const Projects = () => {
       technologies: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Sanity CMS'],
       image: '/project3.jpg',
       duration: '1 חודש',
-      complexity: 'מתחיל',
+      complexity: 'בינוני',
       github: 'https://github.com/omriBg/tech-blog',
       live: 'https://tech-blog-demo.com',
       features: ['SEO optimized', 'Markdown support', 'Search functionality', 'Responsive design']
@@ -70,7 +69,6 @@ const Projects = () => {
               key={project.id}
               className={`project-card ${isVisible ? 'fade-in' : ''}`}
               style={{ animationDelay: `${index * 0.2}s` }}
-
             >
               <div className="project-image">
                 <div className="project-placeholder">

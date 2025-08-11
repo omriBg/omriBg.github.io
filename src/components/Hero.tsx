@@ -6,7 +6,7 @@ const Hero = () => {
   const [isTyping, setIsTyping] = useState(false)
 
   const roles = [
-    "מהנדס תוכנה מתחיל",
+    "מהנדס תוכנה",
     "Full Stack Developer",
     "React & TypeScript Expert",
     "UI/UX Enthusiast",
